@@ -1,0 +1,7 @@
+{
+    "service-name": "database",
+    "image": "postgres:12",
+    "env": "",
+    "volumes": "/database/pg:/var/lib/postgresql/data",
+    "ports": "5432"
+}
