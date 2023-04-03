@@ -3,6 +3,7 @@ package hu.godenyd.k8s.converter;
 import java.io.StringReader;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import hu.godenyd.k8s.converter.deployment.DeploymentBuilder;
@@ -22,7 +23,7 @@ import io.kubernetes.client.util.Yaml;
  */
 public class Main {
 
-    private static String databaseString = "{\"service-name\":\"database\",\"image\":\"postgres:12\",\"env\":\"\",\"volumes\":\"/database/pg:/var/lib/postgresql/data\",\"ports\":\"5432\"}";
+    private static String databaseString = "{\"service-name\":\"database\",\"image\":\"postgres:12\",\"env\":\"\",\"volumes\":\"/database/pg:/var/lib/postgresql/data\",\"ports\":[\"Sanyi:5432\"]}";
 
     private static final String SERVICE_NAME_KEY = "service-name";
     private static final String IMAGE_KEY = "image";
@@ -42,17 +43,19 @@ public class Main {
         String image = databaseObject.getString(IMAGE_KEY);
         String env = databaseObject.getString(ENV_KEY);
         String volumes = databaseObject.getString(VOLUMES_KEY);
-        int ports = Integer.parseInt(databaseObject.getString(PORTS_KEY));
+        JsonArray ports = databaseObject.getJsonArray(PORTS_KEY);
 
         // Build Service
-        V1Service service = ServiceBuilder.buildService(name, ports);
+        //V1Service service = ServiceBuilder.buildService(name, ports);
 
         // Build Deployment
 
-        V1Deployment deployment = DeploymentBuilder.buildDeployment("sample-namespace", name, image, ports, volumes);
+        //V1Deployment deployment = DeploymentBuilder.buildDeployment("sample-namespace", name, image, ports, volumes);
 
-        System.out.println(Yaml.dump(service));
-        System.out.println(Yaml.dump(deployment));
+        System.out.println(Yaml.dump(BuilderUtil.getContainerPorts(ports)));
+
+        //System.out.println(Yaml.dump(service));
+        //System.out.println(Yaml.dump(deployment));
 
     }
 }
