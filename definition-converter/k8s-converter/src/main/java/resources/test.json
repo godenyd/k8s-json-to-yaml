@@ -1,0 +1,11 @@
+{
+    "service-name": "database",
+    "image": "postgres:12",
+    "env": {
+        "POSTGRES_USER": "lportal",
+        "POSTGRES_DB": "lportal",
+        "POSTGRES_PASSWORD": "bHBvcnRhbA=="
+    },
+    "volumes": ["/var/lib/postgresql/data"],
+    "ports": [5432]
+}

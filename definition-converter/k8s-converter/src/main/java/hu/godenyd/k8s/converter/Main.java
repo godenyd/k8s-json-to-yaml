@@ -1,15 +1,14 @@
 package hu.godenyd.k8s.converter;
 
-import java.io.StringReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import hu.godenyd.k8s.converter.deployment.DeploymentBuilder;
 import hu.godenyd.k8s.converter.service.ServiceBuilder;
-import io.kubernetes.client.openapi.models.V1Deployment;
-import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.util.Yaml;
 
 /**
@@ -23,39 +22,23 @@ import io.kubernetes.client.util.Yaml;
  */
 public class Main {
 
-    private static String databaseString = "{\"service-name\":\"database\",\"image\":\"postgres:12\",\"env\":\"\",\"volumes\":\"/database/pg:/var/lib/postgresql/data\",\"ports\":[\"Sanyi:5432\"]}";
-
-    private static final String SERVICE_NAME_KEY = "service-name";
-    private static final String IMAGE_KEY = "image";
-    private static final String ENV_KEY = "env";
-    private static final String VOLUMES_KEY = "volumes";
-    private static final String PORTS_KEY = "ports";
-
     public static void main(String... args) {
 
-        javax.json.JsonReader JsonReader = Json.createReader(new StringReader(databaseString));
-        JsonObject databaseObject = JsonReader.readObject();
-        JsonReader.close();
+        javax.json.JsonReader JsonReader;
+        try {
+            JsonReader = Json.createReader(new FileInputStream(new File(
+                    "/home/davidkaa/Szakdoga/definition-converter/k8s-converter/src/main/java/resources/test.json")));
+            JsonObject databaseObject = JsonReader.readObject();
+            JsonReader.close();
 
-        // Collect variables
+            System.out.println(Yaml.dump(ServiceBuilder.buildService(databaseObject)));
+            System.out.println(Yaml.dump(DeploymentBuilder.buildDeployment(databaseObject)));
 
-        String name = databaseObject.getString(SERVICE_NAME_KEY);
-        String image = databaseObject.getString(IMAGE_KEY);
-        String env = databaseObject.getString(ENV_KEY);
-        String volumes = databaseObject.getString(VOLUMES_KEY);
-        JsonArray ports = databaseObject.getJsonArray(PORTS_KEY);
 
-        // Build Service
-        //V1Service service = ServiceBuilder.buildService(name, ports);
-
-        // Build Deployment
-
-        //V1Deployment deployment = DeploymentBuilder.buildDeployment("sample-namespace", name, image, ports, volumes);
-
-        System.out.println(Yaml.dump(BuilderUtil.getContainerPorts(ports)));
-
-        //System.out.println(Yaml.dump(service));
-        //System.out.println(Yaml.dump(deployment));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 }

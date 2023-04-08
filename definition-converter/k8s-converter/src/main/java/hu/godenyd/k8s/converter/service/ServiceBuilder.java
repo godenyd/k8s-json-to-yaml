@@ -2,45 +2,49 @@ package hu.godenyd.k8s.converter.service;
 
 import java.util.Map;
 
+import javax.json.JsonObject;
+
+import hu.godenyd.k8s.converter.BuilderUtil;
+import hu.godenyd.k8s.converter.JsonKeys;
 import io.kubernetes.client.openapi.models.V1ObjectMeta;
 import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.openapi.models.V1ServiceBuilder;
-import io.kubernetes.client.openapi.models.V1ServicePortBuilder;
 import io.kubernetes.client.openapi.models.V1ServiceSpec;
 import io.kubernetes.client.openapi.models.V1ServiceSpecBuilder;
 
 public class ServiceBuilder {
 
-    public static V1Service buildService(String name, int port) {
+        public static V1Service buildService(JsonObject object) {
 
-        V1ServiceBuilder serviceBuilder = new V1ServiceBuilder();
+                String name = object.getString(JsonKeys.SERVICE_NAME_KEY);
 
-        V1ObjectMeta serviceMeta = new V1ObjectMeta();
+                V1ServiceBuilder serviceBuilder = new V1ServiceBuilder();
 
-        serviceMeta.setName(name);
+                V1ObjectMeta serviceMeta = new V1ObjectMeta();
 
-        serviceMeta.setLabels(Map.of("app", name));
-        serviceBuilder.withMetadata(serviceMeta);
+                serviceMeta.setName(name);
 
-        V1ServiceSpec serviceSpec = new V1ServiceSpecBuilder()
-                .withType("NodePort")
-                .withPorts(new V1ServicePortBuilder()
-                        .withPort(port)
-                        .build())
-                .withSelector(Map.of("app", name))
-                .build();
+                serviceMeta.setLabels(Map.of("app", name));
+                serviceBuilder.withMetadata(serviceMeta);
 
-        serviceBuilder.withSpec(serviceSpec);
+                V1ServiceSpec serviceSpec = new V1ServiceSpecBuilder()
+                                .withType("NodePort")
+                                .withPorts(BuilderUtil
+                                                .getServicePorts(object.getJsonArray(JsonKeys.PORTS_KEY).asJsonArray()))
+                                .withSelector(Map.of("app", name))
+                                .build();
 
-        V1Service service = serviceBuilder
-                .withApiVersion("v1")
-                .withKind("service")
-                .build();
+                serviceBuilder.withSpec(serviceSpec);
 
-        return service;
-    }
+                V1Service service = serviceBuilder
+                                .withApiVersion("v1")
+                                .withKind("service")
+                                .build();
 
-    private ServiceBuilder() {
+                return service;
+        }
 
-    }
+        private ServiceBuilder() {
+
+        }
 }
