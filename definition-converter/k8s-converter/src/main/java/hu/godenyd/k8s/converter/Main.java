@@ -3,6 +3,7 @@ package hu.godenyd.k8s.converter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -30,9 +31,6 @@ public class Main {
                     "/home/davidkaa/Szakdoga/definition-converter/k8s-converter/src/main/java/resources/test.json")));
             JsonObject databaseObject = JsonReader.readObject();
             JsonReader.close();
-
-            System.out.println(Yaml.dump(ServiceBuilder.buildService(databaseObject)));
-            System.out.println(Yaml.dump(DeploymentBuilder.buildDeployment(databaseObject)));
 
 
         } catch (FileNotFoundException e) {
