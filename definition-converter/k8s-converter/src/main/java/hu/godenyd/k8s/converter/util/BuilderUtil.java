@@ -1,4 +1,4 @@
-package hu.godenyd.k8s.converter;
+package hu.godenyd.k8s.converter.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,9 @@ import io.kubernetes.client.openapi.models.V1ContainerPort;
 import io.kubernetes.client.openapi.models.V1ContainerPortBuilder;
 import io.kubernetes.client.openapi.models.V1EnvVar;
 import io.kubernetes.client.openapi.models.V1EnvVarBuilder;
+import io.kubernetes.client.openapi.models.V1EnvVarSourceBuilder;
 import io.kubernetes.client.openapi.models.V1HostPathVolumeSourceBuilder;
+import io.kubernetes.client.openapi.models.V1ObjectFieldSelectorBuilder;
 import io.kubernetes.client.openapi.models.V1ServicePort;
 import io.kubernetes.client.openapi.models.V1ServicePortBuilder;
 import io.kubernetes.client.openapi.models.V1Volume;
@@ -29,7 +31,7 @@ public class BuilderUtil {
 
         List<V1ServicePort> portList = ports.stream().map(port -> {
 
-            String portString = ((JsonString)port).getString();
+            String portString = ((JsonString) port).getString();
 
             String[] parts = portString.split(":");
 
@@ -52,7 +54,7 @@ public class BuilderUtil {
 
         List<V1ContainerPort> portList = ports.stream().map(port -> {
 
-            String portString = ((JsonString)port).getString();
+            String portString = ((JsonString) port).getString();
 
             String[] parts = portString.split(":");
 
@@ -80,6 +82,16 @@ public class BuilderUtil {
             envList.add(new V1EnvVarBuilder().withName(key).withValue(envObject.getString(key)).build());
         });
 
+        envList.add(new V1EnvVarBuilder()
+                .withName("NAMESPACE")
+                .withValueFrom(new V1EnvVarSourceBuilder()
+                        .withFieldRef(new V1ObjectFieldSelectorBuilder()
+                                .withApiVersion("v1")
+                                .withFieldPath("metadata.namespace")
+                                .build())
+                        .build())
+                .build());
+
         return envList;
     }
 
@@ -88,9 +100,13 @@ public class BuilderUtil {
         List<V1VolumeMount> volumeMounts = new ArrayList<V1VolumeMount>();
 
         fullJson.getJsonArray(JsonKeys.VOLUMES_KEY).forEach(volume -> {
+
+            String mountPath = ((JsonString) volume).getString();
+
             volumeMounts.add(new V1VolumeMountBuilder()
-                    .withMountPath(((JsonString)volume).getString())
-                    .withSubPathExpr(getSubPathExpr(fullJson))
+                    .withName(SHARED_VOLUME_NAME)
+                    .withMountPath(mountPath)
+                    .withSubPathExpr((getSubPathExpr(fullJson) + mountPath).replace("//", "/"))
                     .build());
         });
 
@@ -109,7 +125,7 @@ public class BuilderUtil {
     }
 
     public static String getSubPathExpr(JsonObject fullJson) {
-        return "${NAMESPACE}/" + fullJson.getString(JsonKeys.SERVICE_NAME_KEY) + "/";
+        return "$(NAMESPACE)/" + fullJson.getString(JsonKeys.SERVICE_NAME_KEY) + "/";
     }
 
     private BuilderUtil() {

@@ -4,8 +4,8 @@ import java.util.Map;
 
 import javax.json.JsonObject;
 
-import hu.godenyd.k8s.converter.BuilderUtil;
-import hu.godenyd.k8s.converter.JsonKeys;
+import hu.godenyd.k8s.converter.util.BuilderUtil;
+import hu.godenyd.k8s.converter.util.JsonKeys;
 import io.kubernetes.client.openapi.models.V1ObjectMeta;
 import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.openapi.models.V1ServiceBuilder;
@@ -38,7 +38,7 @@ public class ServiceBuilder {
 
                 V1Service service = serviceBuilder
                                 .withApiVersion("v1")
-                                .withKind("service")
+                                .withKind("Service")
                                 .build();
 
                 return service;

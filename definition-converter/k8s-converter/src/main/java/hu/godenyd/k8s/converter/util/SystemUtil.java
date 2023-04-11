@@ -1,4 +1,4 @@
-package hu.godenyd.k8s.converter;
+package hu.godenyd.k8s.converter.util;
 
 public class SystemUtil {
 

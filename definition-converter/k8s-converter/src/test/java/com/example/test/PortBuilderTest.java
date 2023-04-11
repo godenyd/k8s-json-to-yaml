@@ -8,7 +8,7 @@ import javax.json.Json;
 
 import org.junit.jupiter.api.Test;
 
-import hu.godenyd.k8s.converter.BuilderUtil;
+import hu.godenyd.k8s.converter.util.BuilderUtil;
 import io.kubernetes.client.openapi.models.V1ContainerPort;
 import io.kubernetes.client.openapi.models.V1ContainerPortBuilder;
 import io.kubernetes.client.openapi.models.V1ServicePort;

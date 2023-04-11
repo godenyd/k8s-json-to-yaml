@@ -4,8 +4,8 @@ import java.util.Map;
 
 import javax.json.JsonObject;
 
-import hu.godenyd.k8s.converter.BuilderUtil;
-import hu.godenyd.k8s.converter.JsonKeys;
+import hu.godenyd.k8s.converter.util.BuilderUtil;
+import hu.godenyd.k8s.converter.util.JsonKeys;
 import io.kubernetes.client.openapi.models.V1Container;
 import io.kubernetes.client.openapi.models.V1ContainerBuilder;
 import io.kubernetes.client.openapi.models.V1Deployment;
@@ -44,6 +44,7 @@ public class DeploymentBuilder {
                                 .build();
 
                 V1PodTemplateSpec templateSpec = new V1PodTemplateSpecBuilder()
+                                .withMetadata(deploymentMeta)
                                 .withSpec(new V1PodSpecBuilder()
                                                 .withContainers(container)
                                                 .withRestartPolicy("Always")
