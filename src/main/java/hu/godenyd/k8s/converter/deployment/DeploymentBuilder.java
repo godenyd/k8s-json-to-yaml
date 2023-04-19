@@ -18,8 +18,13 @@ import io.kubernetes.client.openapi.models.V1ObjectMeta;
 import io.kubernetes.client.openapi.models.V1PodSpecBuilder;
 import io.kubernetes.client.openapi.models.V1PodTemplateSpec;
 import io.kubernetes.client.openapi.models.V1PodTemplateSpecBuilder;
+import io.kubernetes.client.util.Yaml;
 
 public class DeploymentBuilder {
+
+        public static String buildDeploymentAString(JsonObject object) {
+                return Yaml.dump(object);
+        }
 
         public static V1Deployment buildDeployment(JsonObject object) {
 

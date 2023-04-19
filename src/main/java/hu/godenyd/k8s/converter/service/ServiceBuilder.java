@@ -11,8 +11,13 @@ import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.openapi.models.V1ServiceBuilder;
 import io.kubernetes.client.openapi.models.V1ServiceSpec;
 import io.kubernetes.client.openapi.models.V1ServiceSpecBuilder;
+import io.kubernetes.client.util.Yaml;
 
 public class ServiceBuilder {
+
+        public static String buildServiceAsString(JsonObject object) {
+                return Yaml.dump(buildService(object));
+        }
 
         public static V1Service buildService(JsonObject object) {
 
