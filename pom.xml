@@ -5,7 +5,7 @@
     <name>k8s-converter</name>
     <artifactId>k8s-converter</artifactId>
     <groupId>hu.godenyd.k8s</groupId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 
     <description>A tool that generates k8s configuration files from JSON descriptors</description>
 
