@@ -19,6 +19,15 @@ public class ServiceBuilder {
                 return Yaml.dump(buildService(object));
         }
 
+        public static String buildServiceAsString(String jsonString) {
+                return Yaml.dump(buildService(jsonString));
+        }
+
+        public static V1Service buildService(String jsonString) {
+
+                return buildService(BuilderUtil.getJsonObject(jsonString));
+        }
+
         public static V1Service buildService(JsonObject object) {
 
                 String name = object.getString(JsonKeys.SERVICE_NAME_KEY);

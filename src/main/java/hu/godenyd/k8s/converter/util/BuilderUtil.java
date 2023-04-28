@@ -1,12 +1,15 @@
 package hu.godenyd.k8s.converter.util;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.JsonString;
 
 import io.kubernetes.client.openapi.models.V1ContainerPort;
@@ -127,6 +130,18 @@ public class BuilderUtil {
     public static String getSubPathExpr(JsonObject fullJson) {
         return "$(NAMESPACE)/" + fullJson.getString(JsonKeys.SERVICE_NAME_KEY) + "/";
     }
+
+
+    public static JsonObject getJsonObject(String jsonString) {
+
+        System.out.println(jsonString);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject object = jsonReader.readObject();
+        jsonReader.close();
+
+        return object;
+}
 
     private BuilderUtil() {
 

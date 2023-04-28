@@ -14,7 +14,6 @@ import hu.godenyd.k8s.converter.deployment.DeploymentBuilder;
 import hu.godenyd.k8s.converter.service.ServiceBuilder;
 import io.kubernetes.client.openapi.models.V1Deployment;
 import io.kubernetes.client.openapi.models.V1Service;
-import io.kubernetes.client.proto.V1Apps.DeploymentList;
 import io.kubernetes.client.util.Yaml;
 
 /**

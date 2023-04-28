@@ -26,6 +26,15 @@ public class DeploymentBuilder {
                 return Yaml.dump(object);
         }
 
+        public static String buildDeploymentAString(String jsonString) {
+                return Yaml.dump(buildDeployment(jsonString));
+        }
+
+        public static V1Deployment buildDeployment(String jsonString) {
+
+                return buildDeployment(BuilderUtil.getJsonObject(jsonString));
+        }
+
         public static V1Deployment buildDeployment(JsonObject object) {
 
                 String name = object.getString(JsonKeys.SERVICE_NAME_KEY);
